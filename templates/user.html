@@ -1,0 +1,29 @@
+{% extends 'base.html'  %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div>
+    <h1>Info about {{user.username}}</h1>
+    <ul>
+        <li>First name: {{user.first_name}}</li>
+        <li>Last name: {{user.last_name}}</li>
+        <li>Email: {{user.email}}</li>
+    </ul>
+</div>
+<div>
+    <h3>Feedback left by user</h3>
+    {% for feedback in user_feedback %}
+    <div>
+        <h4>{{feedback.title}}</h4>
+        <p>{{feedback.content}}</p>
+    </div>
+    <a href="/feedback/{{feedback.id}}/update">Update</a>
+    <form action="/feedback/{{feedback.id}}/delete" method="POST">
+        <button>Delete</button>
+    </form>
+    {% endfor %}
+</div>
+
+<a href="/users/{{user.username}}/feedback/add">Add feedback</a>
+<form action="/logout"><button>Log out</button></form>
+<form action="/users/{{user.username}}/delete"><button>Delete account</button></form>
+{% endblock %}

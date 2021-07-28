@@ -5,12 +5,18 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
+def connect_db(app):
+    """Connect to database."""
+
+    db.app = app
+    db.init_app(app)
+
 class User(db.Model):
     """User model for app"""
 
     __tablename__ = 'users'
 
-    username = db.Column(db.String(20), nullable=False, unique=True, primary_key=True)
+    username = db.Column(db.String(20), primary_key=True, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     first_name = db.Column(db.String(30), nullable=False)
@@ -31,8 +37,29 @@ class User(db.Model):
         db.session.add(user)
         return user
 
-def connect_db(app):
-    """Connect to database."""
+    @classmethod
+    def authenticate(cls, username, pwd):
+        """Validate that user exists & password is correct.
 
-    db.app = app
-    db.init_app(app)
+        Return user if valid; else return False.
+        """
+
+        u = User.query.filter_by(username=username).first()
+
+        if u and bcrypt.check_password_hash(u.password, pwd):
+            # return user instance
+            return u
+        else:
+            return False
+
+class Feedback(db.Model):
+    """Feedback from users"""
+
+    __tablename__ = 'feedback'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    username = db.Column(db.Text, db.ForeignKey('users.username'))
+
+    user = db.relationship('User', backref="feedback")

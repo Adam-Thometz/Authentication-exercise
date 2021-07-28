@@ -1,7 +1,7 @@
 {% extends 'base.html'  %}
-{% block title %}Register{% endblock %}
+{% block title %}Edit Feedback{% endblock %}
 {% block content %}
-<h1>Register to give feedback!</h1>
+<h1>Edit Feedback</h1>
 <form method="POST">
     {{ form.hidden_tag() }}
 
@@ -17,7 +17,6 @@
     </p>
     {% endfor %}
   
-    <button class="btn btn-success" type="submit">Register</button>
+    <button class="btn btn-success" type="submit">Submit</button>
 </form>
-<p>Have an account? <a href="/login">Log in to your account!</a></p>
 {% endblock %}
